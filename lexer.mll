@@ -7,9 +7,7 @@
             [' ' '\t']     { token lexbuf }     (* skip blanks *)
           | ['\n' ]        { EOL }
           | '0'            { ZERO }
-          | '1'            { ONE }
-          | 'o'           { OR }
-          | 'a'           { AND }
-          | '('            { LPAREN }
-          | ')'            { RPAREN }
+          | "succ"         { SUCC }
+          | "pred"          {PRED}
+          | "iszero"        {ISZERO}
           | eof            { raise Eof }

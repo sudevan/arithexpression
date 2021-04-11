@@ -1,24 +1,30 @@
         /* File parser.mly */
-        %token ONE
+        %{
+        type nv =
+            ZERO
+          | SUCC of nv
+        %}
+        %token SUCC
         %token ZERO
-        %token OR
-        %token AND
-        %token LPAREN RPAREN
+        %token PRED
         %token EOL
+        %token ISZERO
         %start main             /* the entry point */
-        %type <bool> main
+        %type <string> main
+
         %%
         main:
             expr EOL                { $1 }
         ;
+        nv:
+          |ZERO                    {"0"}
+          |SUCC nv                  {"succ" ^ $2}
+        ;
         expr:
-            ONE                     { true }
-          | ZERO                     { false }
-          | LPAREN expr RPAREN      { $2 }
-          | ONE OR expr             { true }
-          | ZERO OR expr            { $3 }
-          | ONE AND expr            { $3 }
-          | ZERO AND expr           { false }
-          | expr AND expr            { $1 && $3 }
-          | expr OR expr            { $1 || $3 }
+          | nv                       {$1}
+          | PRED ZERO                { "0"}
+          | PRED SUCC nv            { $3 }
+          | ISZERO  ZERO             {"true"}
+          | ISZERO SUCC nv            {"false"}
+          | ISZERO expr               { "iszero" ^ $2}    
         ; 
